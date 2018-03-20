@@ -1,6 +1,6 @@
 <?php
 
-// partie2- question 15
+// partie2- question 15..
 require_once '../data/pdogsbrapports.php';
 // récupère le champ date passé en Ajax
 $idRapport=$_REQUEST['idRapport'];
