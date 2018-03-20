@@ -5,7 +5,7 @@
     ?>
     <div data-role = "content">
          <div class="ui-field-contain">
-            <label for = "recherche">Rechercher un medecin :</label></br>
+            <label for = "recherche">Rechercher  un medecin :</label></br>
             <ul id="autocomplete"  data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="Trouvez un medecin..." data-filter-theme="a">
                 
             </ul>
