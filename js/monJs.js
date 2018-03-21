@@ -91,22 +91,23 @@ $(function(){
     /*--------------------Page médecins ---------------------*/
     $( document ).on( "pageinit", "#pagemedecins", function() {
         $( "#listemedecins" ).on( "filterablebeforefilter", function ( e, data ) {
+            $('#pagemedecins #listemedecins').html("");
             $input = $( data.input ),
             value = $input.val();
-            nomMedecin = value;
+            nomMedecin = $input.val();
     
-            if ( value && value.length >= 1 ) 
+            if ( value && value.length > 2 ) 
             {
-                $('#pagemedecins #listemedecins').listview('refresh');
+                $('#pagemedecins #listemedecins').html("<li><div class='ui-loader'><span class='ui-icon ui-icon-loading'></span></div></li>");
                 $.post("ajax/traiterrecherchermedecins.php",{
                         "nomMedecin" : nomMedecin
                 }, foncRetourRecherchePageMedecins, "json")
             }
+
         });
     });
     
     function foncRetourRecherchePageMedecins(leMedecin){
-        var html="";
         for(i=0; i<leMedecin.length; i++){
             var unMedecin=leMedecin[i];
             var idMedecin=unMedecin['idMedecin'];
@@ -115,13 +116,30 @@ $(function(){
             var adresseMedecin= unMedecin['adresseMedecin'];
             
             html="<li id="+idMedecin+"><a href ='#'>";
-            html+=nomMedecin+""+prenomMedecin+""+adresseMedecin+"</a></li>";
-            
+            html+=nomMedecin+""+prenomMedecin+" "+adresseMedecin+"</a></li>";          
             $('#pagemedecins #listemedecins').append(html);
         }
         
-    $('#pagemedecins #listemedecins').listview('refresh');     
+    $('#pagemedecins #listemedecins').listview("refresh");     
+    $('#pagemedecins #listemedecins').trigger("updatelayout");     
     }
+    
+    $("#pagemedecins #listemedecins").on("click","li", function(e){
+    //indique que cet événement click est ajouté à toutes les balises li 
+    //de la page indiquée
+    //puis récupère la valeur courante de l'attribut id (le médecin sélectionné)
+        var idMedecin=$(this).attr("id"); 
+    //stocke cette valeur dans une variable accessible en dehors de la fonction 
+    //portée script 
+        window.idMedecin=idMedecin;
+    //recuperer le contenu de type text de la balise <li>
+        var medecin=$(this).text();
+    //le mettre dans une variable window
+        window.medecin=medecin;
+    
+    
+    $("#pagemedecins #txtmedecin").val(medecin);
+    });
      
 });     // Fin fonction principale
 
