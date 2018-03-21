@@ -1,2 +1,0 @@
-# Gsb_Jquery
-//
