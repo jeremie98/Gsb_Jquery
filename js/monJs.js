@@ -92,7 +92,7 @@ $(function(){
     $( document ).on( "pageinit", "#pagemedecins", function() {
         $( "#listemedecins" ).on( "filterablebeforefilter", function ( e, data ) {
             $('#pagemedecins #listemedecins').html("");
-            $input = $( data.input ),
+            $input = $( data.input );
             value = $input.val();
             nomMedecin = $input.val();
     
@@ -140,6 +140,49 @@ $(function(){
     
     $("#pagemedecins #txtmedecin").val(medecin);
     });
+    
+    /*--------------------Page mise à jour médecins ---------------------*/
+    $("#pagemedecins #btnMajMedecin").on( "click", function ( e ) {
+        // on test si le champ input text medecin est bien rempli pour pouvoir réaliser l'appel ajax
+        if(window.medecin != null){
+            $.post("ajax/traitergetmedecin.php",{
+                "idMedecin" : window.idMedecin
+            }, foncRetourGetMedecin, "json");
+        } else{
+            e.preventDefault();
+        } 
+    });
+    
+    function foncRetourGetMedecin(data){
+        var adresse = data['adresseMedecin'];
+        var telephone = data['telephoneMedecin'];
+        var specialite = data['specialiteMedecin'];
+        $("#pagemajmedecin #txtadresse").val(adresse);
+        $("#pagemajmedecin #txttelephone").val(telephone);
+        $("#pagemajmedecin #txtspecialite").val(specialite);
+    }
+    
+    $("#pagemajmedecin #btnEnregistrerMajMedecin").bind("click",function(){
+        // récupération du contenu des champs 
+        var adresse = $("#pagemajmedecin #txtadresse").val();
+        var telephone = $("#pagemajmedecin #txttelephone").val();
+        var specialite = $("#pagemajmedecin #txtspecialite").val();
+        
+        $.post("ajax/traitermajmedecin.php",{
+            "idMedecin" : window.idMedecin,
+            "adresseMedecin" : adresse,
+            "telMedecin" : telephone,
+            "speMedecin" : specialite
+        }, foncRetourMajMedecin, "json");          
+    });
+    
+    function foncRetourMajMedecin(data){
+        if(data = true){
+            $("#pagemajmedecin #resultat").css({color:'green'});
+            $("#pagemajmedecin #resultat").html("La mise à jour a bien été effectué");
+        }
+    }
+    
      
 });     // Fin fonction principale
 

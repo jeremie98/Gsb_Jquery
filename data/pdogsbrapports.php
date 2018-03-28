@@ -122,8 +122,39 @@ class PdoGsbRapports{
         $stm->bindParam(':nom', $nomMedecin);
         $stm->execute();
         
-        $laLigne = $stm->fetchall();
+        $lesLignes = $stm->fetchall();
+        return $lesLignes;
+    }
+    
+    public function getLeMedecin($idMedecin){
+        $req = "select medecin.id as idMedecin, medecin.adresse as adresseMedecin,
+        medecin.tel as telephoneMedecin, medecin.specialitecomplementaire as specialiteMedecin
+        from medecin where id = :id";
+        
+        $stm = self::$monPdo->prepare($req);
+        $stm->bindParam(':id', $idMedecin);
+        $stm->execute();
+        
+        $laLigne = $stm->fetch();
         return $laLigne;
+    }
+    
+    public function getMajMedecin($idMedecin, $adresseMedecin, $telMedecin, $speMedecin){
+        $req = "update medecin "
+                . "set medecin.adresse = ?, "
+                . "medecin.tel = ?, "
+                . "medecin.specialitecomplementaire = ?"
+                . "where medecin.id = ?";
+        
+        $stm = self::$monPdo->prepare($req);
+        $stm->bindParam(1, $adresseMedecin);
+        $stm->bindParam(2, $telMedecin);
+        $stm->bindParam(3, $speMedecin);   
+        $stm->bindParam(4, $idMedecin);
+        $resultat = $stm->execute();
+        
+     
+        return $resultat;
     }
     
 }   // fin classe
