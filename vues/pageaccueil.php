@@ -1,12 +1,9 @@
-<?php
-  //  include "entetehtml.html";
-?>
 
-<div data-role= "page" id = "pageaccueil">
+<div data-role = "page" id ="pageaccueil">
 	<?php
 		include "entetepage.html";
 	?>
-	 <div data-role="content" id="divaccueil">
+	 <div data-role="content" >
         <?php
             include "logo.html";
         ?>		

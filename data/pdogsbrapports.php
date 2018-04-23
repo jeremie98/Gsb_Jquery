@@ -117,7 +117,7 @@ class PdoGsbRapports{
          public function getLesMedecins($nom){
             //$req = "select * from medecin where nom like 'nom%' ";
             
-            $req = "select medecin.id as idMedecin, medecin.nom as nomMedecin , medecin.prenom as prenomMedecin, medecin.adresse as adresseMedecin
+            $req = "select medecin.id as idMedecin, medecin.nom as nomMedecin , medecin.prenom as prenomMedecin, medecin.adresse as adresseMedecin, medecin.tel as telephoneMedecin
                     from medecin                       
                     where nom like '$nom%'
                     order by medecin.nom desc ";
@@ -131,6 +131,80 @@ class PdoGsbRapports{
             return $lesLignes;
         }
         
+         public function getLeMedecin($idMedecin){
+             $req = "select medecin.adresse as adresse , medecin.tel as telephone, medecin.specialitecomplementaire as specialite
+                    from medecin                       
+                    where id = :idMedecin";
+            
+            $stm = self::$monPdo->prepare($req);
+            $stm->bindParam(':idMedecin',$idMedecin);
+            
+            $stm->execute();
+            
+            $Ligne = $stm->fetch();
+            return $Ligne;
+        }
+        
+     public function majLeMedecin($idMedecin,$adresse,$telephone,$specialite){
+         $req = "update medecin 
+                set medecin.adresse = '$adresse', medecin.tel = '$telephone', medecin.specialitecomplementaire= '$specialite' 
+                where id = '$idMedecin' ";
+                 
+                 
+                $stm=self::$monPdo->prepare($req);
+         
+                $stm->bindParam(':adresse',$adresse);
+                $stm->bindParam(':telephone',$telephone);
+                $stm->bindParam(':specialite',$specialite);
+                $stm->bindParam(':idMedecin',$idMedecin);
+                
+                $stm->execute();
+              
+               if($stm->rowCount()==1){
+                   $message = "Update reussi";
+               }
+               else {
+                   $message = "Echec Update";
+               }
+         
+               return $message ; 
+                
+              //  $LigneMedecin=$stm->fetch();
+              //  return $LigneMedecin;
+        
+     }
+       
+      public function getLesRapports($idMedecin){
+            $req = "select rapport.date as date ,rapport.motif as motif, rapport.bilan as bilan , visiteur.nom as nomVisiteur,visiteur.prenom as prenomVisiteur
+                    from rapport 
+                    INNER JOIN visiteur ON visiteur.id = rapport.idVisiteur
+                    where idMedecin = '$idMedecin'
+                    order by rapport.date desc ";
+            
+            $stm = self::$monPdo->prepare($req);
+            $stm->bindParam(':idMedecin',$idMedecin);
+            
+            $stm->execute();
+            
+            $laLigne = $stm->fetchall();
+            return $laLigne;
+        }
+     
+    public function getLesMedicaments($nomMedicament){
+           
+            $req = "select medicament.id as idMedicament, medicament.nomCommercial as nom
+                    from medicament                      
+                    where nomCommercial like '$nomMedicament%'
+                    order by medicament.nomCommercial desc ";
+            
+            $stm = self::$monPdo->prepare($req);
+            $stm->bindParam(':nomCommercial',$nomMedicament);
+            
+            $stm->execute();
+            
+            $lesLignes = $stm->fetchall();
+            return $lesLignes;
+        }
 }   // fin classe
 ?>
 

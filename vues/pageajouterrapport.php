@@ -1,7 +1,7 @@
 <?php
 //include "entetehtml.html";
 ?>
-<div data-role = "page" id="pageAjoutRapport">
+<div data-role = "page" id="pageajouterrapport">
    
 	<?php 
 		include "vues/entetepage.html";
